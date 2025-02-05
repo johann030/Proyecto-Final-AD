@@ -2,7 +2,7 @@ package modelo_hibernate;
 
 import java.time.LocalDate;
 
-public class Alumno {
+public class AlumnoH {
 	private int nia;
 	private String nombre;
 	private String apellidos;
@@ -12,10 +12,10 @@ public class Alumno {
 	private String curso;
 	private int id_grupo;
 
-	public Alumno() {
+	public AlumnoH() {
 	}
 
-	public Alumno(int nia, String nombre, String apellidos, String genero, LocalDate nacimiento, String ciclo,
+	public AlumnoH(int nia, String nombre, String apellidos, String genero, LocalDate nacimiento, String ciclo,
 			String curso, int id_grupo) {
 		this.nia = nia;
 		this.nombre = nombre;

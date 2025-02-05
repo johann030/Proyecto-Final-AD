@@ -1,19 +1,19 @@
 package modelo_hibernate;
 
-public class Grupo {
+public class GrupoH {
 	private int id_grupo;
 	private String nombre;
 	private int aula;
 
-	public Grupo() {
+	public GrupoH() {
 	}
 
-	public Grupo(String nombre, int aula) {
+	public GrupoH(String nombre, int aula) {
 		this.nombre = nombre;
 		this.aula = aula;
 	}
 
-	public Grupo(int id_grupo, String nombre, int aula) {
+	public GrupoH(int id_grupo, String nombre, int aula) {
 		this(nombre, aula);
 		this.id_grupo = id_grupo;
 	}

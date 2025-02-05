@@ -5,7 +5,20 @@ import java.util.List;
 import modelo.Alumno;
 import modelo.Grupo;
 
-public class AlumnoHibernate implements AlumnoDao{
+public class AlumnoHibernate implements AlumnoDao {
+
+	private static AlumnoHibernate instance;
+
+	static {
+		instance = new AlumnoHibernate();
+	}
+
+	private AlumnoHibernate() {
+	}
+
+	public static AlumnoHibernate getInstance() {
+		return instance;
+	}
 
 	@Override
 	public int insertarAlumno(Alumno al) throws Exception {
@@ -28,13 +41,13 @@ public class AlumnoHibernate implements AlumnoDao{
 	@Override
 	public void guardarTxtAlumnos() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void leerTxtAlumnos() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -46,31 +59,31 @@ public class AlumnoHibernate implements AlumnoDao{
 	@Override
 	public void borrarPorPK(int id) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void borrarPorApellido(String apellido) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void borrarAlumnosPorCurso(String curso) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void guardarJSONGrupos() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void leerJSONGrupos() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
