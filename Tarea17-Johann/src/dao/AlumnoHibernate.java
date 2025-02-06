@@ -2,8 +2,14 @@ package dao;
 
 import java.util.List;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
+
 import modelo.Alumno;
 import modelo.Grupo;
+import pool.HibernateUtil;
 
 public class AlumnoHibernate implements AlumnoDao {
 
@@ -22,7 +28,21 @@ public class AlumnoHibernate implements AlumnoDao {
 
 	@Override
 	public int insertarAlumno(Alumno al) throws Exception {
-		// TODO Auto-generated method stub
+		Transaction tx = null;
+		try (SessionFactory sf = HibernateUtil.getSessionFactory(); Session session = sf.openSession()) {
+			// Crear la transaccion de la sesion
+			tx = session.beginTransaction();
+
+			// Insercion
+			String insert = """
+					INSERT INTO Alumnos()
+					SELECT
+					""";
+			Query consulta = null;
+
+		} catch (Exception e) {
+
+		}
 		return 0;
 	}
 
@@ -82,6 +102,30 @@ public class AlumnoHibernate implements AlumnoDao {
 
 	@Override
 	public void leerJSONGrupos() throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public List<Alumno> mostrarAlumnosPorGrupo() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Alumno> mostrarAlumnoPorPK() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int cambiarGrupo() throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void elegirGrupoJSON() throws Exception {
 		// TODO Auto-generated method stub
 
 	}

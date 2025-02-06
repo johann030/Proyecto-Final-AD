@@ -336,4 +336,28 @@ public class AlumnoBD implements AlumnoDao {
 			}
 		}
 	}
+
+	@Override
+	public List<Alumno> mostrarAlumnosPorGrupo() throws Exception {
+		mostrarAlumnos();
+		return null;
+	}
+
+	@Override
+	public List<Alumno> mostrarAlumnoPorPK() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int cambiarGrupo() throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void elegirGrupoJSON() throws Exception {
+		// TODO Auto-generated method stub
+
+	}
 }

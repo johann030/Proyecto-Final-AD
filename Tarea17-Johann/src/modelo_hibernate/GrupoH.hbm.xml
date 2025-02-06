@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generated 3 nov2021 19:50:48 by Hibernate Tools 5.5.7.Final-->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD
+3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping mapping-3.0.dtd">
+<hibernate-mapping auto-import="true" default-access="property" default-cascade="none"
+    default-lazy="true">
+    <class catalog="ejemplo" dynamic-insert="false" dynamic-update="false" mutable="true"
+        name="clasesBasesDatos.Empleados" optimistic- lock="none"
+        polymorphism="implicit" select-before-update="false" table="grupos">
+        <id name="empNo" type="short">
+            <column name="emp_no" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one class="clasesBasesDatos.Departamentos" embed-xml="true" fetch="select"
+            insert="true" name="departamentos" not
+            found="exception" optimistic-lock="true" unique="false" update="true">
+            <columnname="dept_no"not-null="true"/>
+        </many-to-one>
+        <property generated="never" lazy="false" name="apellido" optimistic-lock="true"
+            type="string" unique="false"> "-//Hibernate/Hibernate Mapping DTD <column length="25"
+                name="apellido" not-null="true" />
+        </property>
+        <property generated="never" lazy="false" name="puesto" optimistic-lock="true" type="string"
+            unique="false">
+            <columnlength="10" name="puesto"/>
+        </property>
+        <property generated="never" lazy="false" name="fechaAlta" optimistic-lock="true" type="date"
+            unique="false">
+            <columnlength="10" name="fecha_alta"/>
+        </property>
+        <property generated="never" lazy="false" name="salario" optimistic-lock="true"
+            type="java.lang.Float" unique="false">
+            <columnname="salario"precision="12" scale="0"/>
+        </property>
+        <property generated="never" lazy="false" name="variable" optimistic-lock="true"
+            type="java.lang.Float" unique="false">
+            <columnname="variable" precision="12" scale="0"/>
+        </property>
+    </class>
+</hibernate-mapping>

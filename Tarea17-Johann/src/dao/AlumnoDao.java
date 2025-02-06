@@ -28,4 +28,12 @@ public interface AlumnoDao {
 	void guardarJSONGrupos() throws Exception;
 
 	void leerJSONGrupos() throws Exception;
+
+	List<Alumno> mostrarAlumnosPorGrupo() throws Exception;
+
+	List<Alumno> mostrarAlumnoPorPK() throws Exception;
+
+	int cambiarGrupo() throws Exception;
+
+	void elegirGrupoJSON() throws Exception;
 }
