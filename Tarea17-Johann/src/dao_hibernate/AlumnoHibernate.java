@@ -1,14 +1,16 @@
-package dao;
+package dao_hibernate;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
 
-import modelo.Alumno;
-import modelo.Grupo;
+import modelo_hibernate.AlumnoH;
+import modelo_hibernate.GrupoH;
 import pool.HibernateUtil;
 
 public class AlumnoHibernate implements AlumnoDao {
@@ -27,33 +29,34 @@ public class AlumnoHibernate implements AlumnoDao {
 	}
 
 	@Override
-	public int insertarAlumno(Alumno al) throws Exception {
+	public int insertarAlumno(AlumnoH al) throws Exception {
 		Transaction tx = null;
 		try (SessionFactory sf = HibernateUtil.getSessionFactory(); Session session = sf.openSession()) {
 			// Crear la transaccion de la sesion
 			tx = session.beginTransaction();
 
-			// Insercion
-			String insert = """
-					INSERT INTO Alumnos()
-					SELECT
-					""";
-			Query consulta = null;
+			// Insertar el alumno usando persist()
+			session.persist(al);
+
+			tx.commit();
+			return 1;
 
 		} catch (Exception e) {
-
+			if (tx != null) {
+				tx.rollback();
+			}
+			throw e;
 		}
-		return 0;
 	}
 
 	@Override
-	public int insertarGrupo(Grupo gp) throws Exception {
+	public int insertarGrupo(GrupoH gp) throws Exception {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public List<Alumno> mostrarAlumnos() throws Exception {
+	public List<AlumnoH> mostrarAlumnos() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -107,13 +110,13 @@ public class AlumnoHibernate implements AlumnoDao {
 	}
 
 	@Override
-	public List<Alumno> mostrarAlumnosPorGrupo() throws Exception {
+	public List<AlumnoH> mostrarAlumnosPorGrupo() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<Alumno> mostrarAlumnoPorPK() throws Exception {
+	public List<AlumnoH> mostrarAlumnoPorPK() throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -130,4 +133,7 @@ public class AlumnoHibernate implements AlumnoDao {
 
 	}
 
+	public void mostrarCursos() throws Exception {
+		// TODO Auto-generated method stub
+	}
 }
