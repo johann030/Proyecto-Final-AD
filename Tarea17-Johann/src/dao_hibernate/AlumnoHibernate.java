@@ -1,19 +1,21 @@
 package dao_hibernate;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.MutationQuery;
 
 import modelo_hibernate.AlumnoH;
 import modelo_hibernate.GrupoH;
 import pool.HibernateUtil;
 
 public class AlumnoHibernate implements AlumnoDao {
+
+	private static final Logger logger = LogManager.getLogger(AlumnoHibernate.class);
 
 	private static AlumnoHibernate instance;
 
@@ -30,83 +32,186 @@ public class AlumnoHibernate implements AlumnoDao {
 
 	@Override
 	public int insertarAlumno(AlumnoH al) throws Exception {
-		Transaction tx = null;
-		try (SessionFactory sf = HibernateUtil.getSessionFactory(); Session session = sf.openSession()) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction transaccion = null;
+		try {
 			// Crear la transaccion de la sesion
-			tx = session.beginTransaction();
+			transaccion = session.beginTransaction();
 
 			// Insertar el alumno usando persist()
 			session.persist(al);
 
-			tx.commit();
+			transaccion.commit();
 			return 1;
 
 		} catch (Exception e) {
-			if (tx != null) {
-				tx.rollback();
+			if (transaccion != null) {
+				transaccion.rollback();
+				logger.error("Error al insertar el alumno." + e.getMessage(), e);
 			}
-			throw e;
+			return 0;
+		} finally {
+			session.close();
 		}
 	}
 
 	@Override
 	public int insertarGrupo(GrupoH gp) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction transaccion = null;
+		try {
+			transaccion = session.beginTransaction();
+
+			session.persist(gp);
+
+			transaccion.commit();
+			return 1;
+
+		} catch (Exception e) {
+			if (transaccion != null) {
+				transaccion.rollback();
+				logger.error("Error al insertar el grupo." + e.getMessage(), e);
+			}
+			return 0;
+		} finally {
+			session.close();
+		}
 	}
 
 	@Override
 	public List<AlumnoH> mostrarAlumnos() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		List<AlumnoH> AlumnoH = new ArrayList<>();
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		try {
+			AlumnoH = session.createSelectionQuery("FROM AlumnoH", AlumnoH.class).getResultList();
 
-	@Override
-	public void guardarTxtAlumnos() throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void leerTxtAlumnos() throws Exception {
-		// TODO Auto-generated method stub
-
+		} catch (Exception e) {
+			logger.error("Error al mostrar los alumnos." + e.getMessage(), e);
+		} finally {
+			session.close();
+		}
+		return AlumnoH;
 	}
 
 	@Override
 	public int cambiarNombre(String nombre, int id) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction transaccion = null;
+		try {
+			transaccion = session.beginTransaction();
+
+			String hql = """
+					UPDATE AlumnoH a
+					SET a.nombre = :nombre
+					WHERE a.nia = :id
+					""";
+			MutationQuery q = session.createMutationQuery(hql);
+			q.setParameter("nombre", nombre);
+			q.setParameter("id", id);
+			int filas = q.executeUpdate();
+
+			transaccion.commit();
+
+			return filas;
+
+		} catch (Exception e) {
+			if (transaccion != null) {
+				transaccion.rollback();
+				logger.error("Error al cambiar el nombre del alumno." + e.getMessage(), e);
+			}
+			return 0;
+		} finally {
+			session.close();
+		}
 	}
 
 	@Override
 	public void borrarPorPK(int id) throws Exception {
-		// TODO Auto-generated method stub
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction transaccion = null;
+		try {
+			transaccion = session.beginTransaction();
 
+			AlumnoH al = session.get(AlumnoH.class, id);
+
+			if (al != null) {
+				session.remove(al);
+			}
+
+			transaccion.commit();
+
+		} catch (Exception e) {
+			if (transaccion != null) {
+				transaccion.rollback();
+				logger.error("Error al borrar el alumno." + e.getMessage(), e);
+			}
+		} finally {
+			session.close();
+		}
 	}
 
 	@Override
 	public void borrarPorApellido(String apellido) throws Exception {
-		// TODO Auto-generated method stub
+		// TODO
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction transaccion = null;
+		try {
+			transaccion = session.beginTransaction();
+
+			AlumnoH al = session.get(AlumnoH.class, apellido);
+
+			if (al != null) {
+				session.remove(al);
+			}
+
+			transaccion.commit();
+
+		} catch (Exception e) {
+			if (transaccion != null) {
+				transaccion.rollback();
+				logger.error("Error al borrar el alumno." + e.getMessage(), e);
+			}
+		} finally {
+			session.close();
+		}
 
 	}
 
 	@Override
 	public void borrarAlumnosPorCurso(String curso) throws Exception {
-		// TODO Auto-generated method stub
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Transaction transaccion = null;
+		try {
+			transaccion = session.beginTransaction();
 
-	}
+			String hql = """
+					SELECT a.nia
+					FROM AlumnoH a
+					""";
 
-	@Override
-	public void guardarJSONGrupos() throws Exception {
-		// TODO Auto-generated method stub
+			List<String> cursos = session.createSelectionQuery(hql, String.class).getResultList();
 
-	}
+			System.out.println("LISTADO DE CURSOS");
+			for (String Curso : cursos) {
+				System.out.println(Curso);
+			}
+			// TODO
+			AlumnoH al = session.get(AlumnoH.class, "");
 
-	@Override
-	public void leerJSONGrupos() throws Exception {
-		// TODO Auto-generated method stub
+			if (al != null) {
+				session.remove(al);
+			}
 
+			transaccion.commit();
+
+		} catch (Exception e) {
+			if (transaccion != null) {
+				transaccion.rollback();
+				logger.error("Error al borrar el alumno." + e.getMessage(), e);
+			}
+		} finally {
+			session.close();
+		}
 	}
 
 	@Override
@@ -125,12 +230,6 @@ public class AlumnoHibernate implements AlumnoDao {
 	public int cambiarGrupo() throws Exception {
 		// TODO Auto-generated method stub
 		return 0;
-	}
-
-	@Override
-	public void elegirGrupoJSON() throws Exception {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void mostrarCursos() throws Exception {

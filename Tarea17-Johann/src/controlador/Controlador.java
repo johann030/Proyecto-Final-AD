@@ -1,4 +1,4 @@
-package main;
+package controlador;
 
 import dao.AlumnoDao;
 import dao.AlumnoBD;

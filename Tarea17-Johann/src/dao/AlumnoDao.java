@@ -13,10 +13,6 @@ public interface AlumnoDao {
 
 	List<Alumno> mostrarAlumnos() throws Exception;
 
-	void guardarTxtAlumnos() throws Exception;
-
-	void leerTxtAlumnos() throws Exception;
-
 	int cambiarNombre(String nombre, int id) throws Exception;
 
 	void borrarPorPK(int id) throws Exception;
@@ -24,10 +20,6 @@ public interface AlumnoDao {
 	void borrarPorApellido(String apellido) throws Exception;
 
 	void borrarAlumnosPorCurso(String curso) throws Exception;
-
-	void guardarJSONGrupos() throws Exception;
-
-	void leerJSONGrupos() throws Exception;
 
 	List<Alumno> mostrarAlumnosPorGrupo() throws Exception;
 

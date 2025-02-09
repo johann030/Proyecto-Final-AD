@@ -8,15 +8,25 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import dao.AlumnoBD;
+import ficheros.FicherosBBDD;
 import modelo.Alumno;
 import modelo.Grupo;
+import modelo_hibernate.AlumnoH;
+import modelo_hibernate.GrupoH;
 
 public class VistaConsola implements IVista {
+
+	private static final Logger logger = LogManager.getLogger(VistaHibernate.class);
 
 	private reader reader;
 
 	private AlumnoBD dao;
+
+	private FicherosBBDD fh;
 
 	public VistaConsola() {
 		reader = new reader();
@@ -179,26 +189,26 @@ public class VistaConsola implements IVista {
 		System.out.print("Introduzca el nia: ");
 		int nia = reader.nextInt();
 		System.out.print("Introduzca el nombre: ");
-		String nombre = reader.nextLine();
+		String nombre = reader.nextLine().toUpperCase();
 		System.out.print("Introduzca los apellidos: ");
-		String apellidos = reader.nextLine();
+		String apellidos = reader.nextLine().toUpperCase();
 		System.out.print("Introduzca el genero: ");
-		String genero = reader.nextLine();
+		char g = reader.nextLine().charAt(0);
+		String genero = String.valueOf(g).toUpperCase();
 		System.out.print("Introduzca la fecha de nacimiento (dd/MM/aaaa): ");
 		LocalDate nacimiento = reader.nextLocalDate();
 		System.out.print("Introduzca el ciclo: ");
-		String ciclo = reader.nextLine();
+		String ciclo = reader.nextLine().toUpperCase();
 		System.out.print("Introduzca el curso: ");
-		String curso = reader.nextLine();
+		String curso = reader.nextLine().toUpperCase();
 		System.out.print("Introduzca el codigo del grupo: ");
 		int id_grupo = reader.nextInt();
 
 		try {
 			dao.insertarAlumno(new Alumno(nia, nombre, apellidos, genero, nacimiento, ciclo, curso, id_grupo));
-			System.out.println("Nuevo alumno insertado correctamente.");
+			logger.info("El alumno se inserto correctamente.");
 		} catch (Exception e) {
-			System.err.println("Error insertando el nuevo alumno.");
-			e.printStackTrace();
+			logger.error("Error al insertar el alumno." + e.getMessage(), e);
 		}
 		System.out.println("");
 	}
@@ -215,10 +225,9 @@ public class VistaConsola implements IVista {
 
 		try {
 			dao.insertarGrupo(new Grupo(id, nombre, aula));
-			System.out.println("Nuevo grupo insertado correctamente.");
+			logger.info("El grupo se inserto correctamente.");
 		} catch (Exception e) {
-			System.err.println("Error insertando el nuevo grupo.");
-			e.printStackTrace();
+			logger.error("Error al borrar los alumnos." + e.getMessage(), e);
 		}
 		System.out.println("");
 	}
@@ -230,13 +239,13 @@ public class VistaConsola implements IVista {
 			List<Alumno> alumnos = dao.mostrarAlumnos();
 
 			if (alumnos.isEmpty()) {
-				System.out.println("No hay alumnos registrados.");
+				logger.info("El alumno esta vacio.");
 			} else {
 				alumnos.forEach(System.out::println);
+				logger.info("Se mostro las lista de los alumnos");
 			}
 		} catch (Exception e) {
-			System.err.println("Error al mostrar los alumnos.");
-			e.printStackTrace();
+			logger.error("Error al insertar el alumno." + e.getMessage(), e);
 		}
 		System.out.println("");
 	}
@@ -245,11 +254,10 @@ public class VistaConsola implements IVista {
 		System.out.println("\nGUARDAR EN FICHERO(TXT)");
 		System.out.println("-----------------------");
 		try {
-			dao.guardarTxtAlumnos();
-			System.out.println("Escritura hecha correctamente en el fichero.");
+			fh.guardarTxtAlumnos();
+			logger.info("Se ha guardado correctamente en el fichero.");
 		} catch (Exception e) {
-			System.err.println("Error al guardar los alumnos en el fichero.");
-			e.printStackTrace();
+			logger.error("Error al guardar en el fichero." + e.getMessage(), e);
 		}
 		System.out.println("");
 	}
@@ -258,11 +266,10 @@ public class VistaConsola implements IVista {
 		System.out.println("\nLEER UN FICHERO(TXT)");
 		System.out.println("-----------------------");
 		try {
-			dao.leerTxtAlumnos();
-			System.out.println("Lectura del fichero correcta, guardada en la base de datos.");
+			fh.leerTxtAlumnos();
+			logger.info("Se ha leido correctamente el fichero y guardado en la base de datos.");
 		} catch (Exception e) {
-			System.err.println("Error al guardar los alumnos en la base de datos.");
-			e.printStackTrace();
+			logger.error("Error al guardar en el fichero." + e.getMessage(), e);
 		}
 		System.out.println("");
 	}
@@ -276,10 +283,9 @@ public class VistaConsola implements IVista {
 		String nombre = reader.nextLine();
 		try {
 			dao.cambiarNombre(nombre, id);
-			System.out.println("El nombre ha sido actualizado correctamente.");
+			logger.info("El nombre se ha actualizado.");
 		} catch (Exception e) {
-			System.err.println("Error al cambiar el nombre.");
-			e.printStackTrace();
+			logger.error("Error al actualizar el nombre." + e.getMessage(), e);
 		}
 		System.out.println("");
 	}
@@ -291,10 +297,9 @@ public class VistaConsola implements IVista {
 		int id = reader.nextInt();
 		try {
 			dao.borrarPorPK(id);
-			System.out.println("Se ha borrado al alumno correctamente.");
+			logger.info("Se ha borrado el alumno correctamente.");
 		} catch (Exception e) {
-			System.err.println("Error al borrar el alumno.");
-			e.printStackTrace();
+			logger.error("Error al borrar el alumno." + e.getMessage(), e);
 		}
 		System.out.println("");
 	}
@@ -306,10 +311,9 @@ public class VistaConsola implements IVista {
 		String apellido = reader.nextLine();
 		try {
 			dao.borrarPorApellido(apellido);
-			System.out.println("Se ha borrado al alumno correctamente.");
+			logger.info("Se ha borrado el alumno correctamente.");
 		} catch (Exception e) {
-			System.err.println("Error al borrar el alumno.");
-			e.printStackTrace();
+			logger.error("Error al borrar el alumno." + e.getMessage(), e);
 		}
 		System.out.println("");
 	}
@@ -324,33 +328,46 @@ public class VistaConsola implements IVista {
 			System.out.print("Introduzca el nia del alumno: ");
 			String curso = reader.nextLine();
 			dao.borrarAlumnosPorCurso(curso);
-			System.out.println("Se han borrado los alumnos correctamente.");
+			logger.info("Se han borrado los alumnos correctamente.");
 		} catch (Exception e) {
-			System.err.println("Error al borrar el alumno.");
-			e.printStackTrace();
+			logger.error("Error al insertar el alumno." + e.getMessage(), e);
 		}
 		System.out.println("");
 	}
 
 	public void guardarGrupos() {
 		try {
-			dao.guardarJSONGrupos();
-			System.out.println("Escritura hecha correctamente en el fichero.");
+			fh.guardarJSONGrupos();
+			logger.info("Se ha guardado correctamente en el fichero");
 		} catch (Exception e) {
-			System.err.println("Error al guardar los grupos en el fichero.");
-			e.printStackTrace();
+			logger.error("Error al insertar el alumno." + e.getMessage(), e);
 		}
 		System.out.println("");
 	}
 
 	public void recogerGrupos() {
 		try {
-			dao.leerJSONGrupos();
-			System.out.println("Lectura del fichero correcta, guardada en la base de datos.");
+			fh.leerJSONGrupos();
+			logger.info("Se ha leido correctamente el fichero y guardado en la base de datos.");
 		} catch (Exception e) {
-			System.err.println("Error al guardar los grupos en la base de datos.");
-			e.printStackTrace();
+			logger.error("Error al insertar el alumno." + e.getMessage(), e);
 		}
 		System.out.println("");
+	}
+
+	public void mostrarAlumnoGrupo() {
+
+	}
+
+	public void mostrarAlumnoPK() {
+
+	}
+
+	public void cambiarGrupoAlumno() {
+
+	}
+
+	public void guardarGrupoElegido() {
+
 	}
 }
