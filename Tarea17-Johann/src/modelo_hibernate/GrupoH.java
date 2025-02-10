@@ -14,13 +14,13 @@ public class GrupoH implements Serializable {
 	private static final long serialVersionUID = 1655512437348433605L;
 
 	@Id
-	@Column(name = "id_grupo", nullable = false)
+	@Column(name = "IdGrupo", nullable = false)
 	private int id_grupo;
 
-	@Column(name = "nombre_grupo", length = 100)
+	@Column(name = "NombreGrupo", length = 100)
 	private String nombre;
 
-	@Column(name = "aula")
+	@Column(name = "Aula")
 	private int aula;
 
 	public GrupoH() {

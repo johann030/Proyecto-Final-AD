@@ -42,6 +42,7 @@ public class AlumnoHibernate implements AlumnoDao {
 			session.persist(al);
 
 			transaccion.commit();
+			logger.info("Alumno insertado correctamente.");
 			return 1;
 
 		} catch (Exception e) {
@@ -65,6 +66,7 @@ public class AlumnoHibernate implements AlumnoDao {
 			session.persist(gp);
 
 			transaccion.commit();
+			logger.info("Grupo insertado correctamente.");
 			return 1;
 
 		} catch (Exception e) {
@@ -84,6 +86,7 @@ public class AlumnoHibernate implements AlumnoDao {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		try {
 			AlumnoH = session.createSelectionQuery("FROM AlumnoH", AlumnoH.class).getResultList();
+			logger.info("Lista de alumnos mostrada.");
 
 		} catch (Exception e) {
 			logger.error("Error al mostrar los alumnos." + e.getMessage(), e);
@@ -111,6 +114,8 @@ public class AlumnoHibernate implements AlumnoDao {
 			int filas = q.executeUpdate();
 
 			transaccion.commit();
+
+			logger.info("Nombre cambiado correctamente.");
 
 			return filas;
 
@@ -140,6 +145,8 @@ public class AlumnoHibernate implements AlumnoDao {
 
 			transaccion.commit();
 
+			logger.info("Alumno borrado correctamente.");
+
 		} catch (Exception e) {
 			if (transaccion != null) {
 				transaccion.rollback();
@@ -165,6 +172,8 @@ public class AlumnoHibernate implements AlumnoDao {
 			}
 
 			transaccion.commit();
+
+			logger.info("Alumno borrado correctamente.");
 
 		} catch (Exception e) {
 			if (transaccion != null) {
@@ -199,7 +208,7 @@ public class AlumnoHibernate implements AlumnoDao {
 			AlumnoH al = session.get(AlumnoH.class, "");
 
 			if (al != null) {
-				session.remove(al);
+				session.remove(al.getCurso());
 			}
 
 			transaccion.commit();
