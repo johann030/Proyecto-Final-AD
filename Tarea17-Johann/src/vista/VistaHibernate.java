@@ -350,7 +350,11 @@ public class VistaHibernate implements IVista {
 	}
 
 	public void mostrarAlumnoGrupo() {
-
+		try {
+			dao.mostrarAlumnosPorGrupo();
+		} catch (Exception e) {
+			logger.error("Error al recuperar el alumno." + e.getMessage(), e);
+		}
 	}
 
 	public void mostrarAlumnoPK() {

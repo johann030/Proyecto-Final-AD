@@ -195,7 +195,8 @@ public class AlumnoHibernate implements AlumnoDao {
 			for (String Curso : cursos) {
 				System.out.println(Curso);
 			}
-			// TODO
+			// TODOEliminar los alumnos del curso indicado por el usuario (debes mostrarle
+			// previamente los cursos existentes).
 			AlumnoH al = session.get(AlumnoH.class, "");
 
 			if (al != null) {
@@ -216,23 +217,36 @@ public class AlumnoHibernate implements AlumnoDao {
 
 	@Override
 	public List<AlumnoH> mostrarAlumnosPorGrupo() throws Exception {
-		// TODO Auto-generated method stub
+		// TODO Mostrar los alumnos del grupo que elija el usuario: Mostrara los datos
+		// del alumno y del grupo al que pertenece
+		List<AlumnoH> al = mostrarAlumnos();
+		for (AlumnoH alH : al) {
+			System.out.println(alH);
+		}
 		return null;
 	}
 
 	@Override
 	public List<AlumnoH> mostrarAlumnoPorPK() throws Exception {
-		// TODO Auto-generated method stub
+//		Mostrar el alumno (todos sus datos) a partir de su PK que elije el 
+//		usuario. Para ello, primero se deben mostrar todos los alumnos (solo la 
+//		PK y el nombre) e indicar al usuario que elija el que quiere mostrar. 
 		return null;
 	}
 
 	@Override
 	public int cambiarGrupo() throws Exception {
-		// TODO Auto-generated method stub
+//		Cambiar de grupo al alumno que elija el usuario. Para ello, primero se 
+//		deben mostrar todos los alumnos (solo la PK y el nombre) e indicar al 
+//		usuario que elija la PK del alumno que quiere cambiar. Después se 
+//		mostrarán los grupos, para que el usuario elija a qué grupo irá el alumno.
 		return 0;
 	}
 
 	public void mostrarCursos() throws Exception {
-		// TODO Auto-generated method stub
+//		Guardar el grupo que elija el usuario (con toda su información como 
+//				atributos) en un fichero XML o JSON. Para cada grupo se guardará 
+//				también el listado de alumnos de ese grupo. Los datos del alumno serán 
+//				atributos en el XML
 	}
 }
