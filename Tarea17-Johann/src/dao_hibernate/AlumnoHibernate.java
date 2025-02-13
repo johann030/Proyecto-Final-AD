@@ -96,6 +96,21 @@ public class AlumnoHibernate implements AlumnoDao {
 		return AlumnoH;
 	}
 
+	public List<GrupoH> conseguirGrupos() throws Exception {
+		List<GrupoH> GrupoH = new ArrayList<>();
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		try {
+			GrupoH = session.createSelectionQuery("FROM GrupoH", GrupoH.class).getResultList();
+			logger.info("Lista de alumnos mostrada.");
+
+		} catch (Exception e) {
+			logger.error("Error al mostrar los alumnos." + e.getMessage(), e);
+		} finally {
+			session.close();
+		}
+		return GrupoH;
+	}
+
 	@Override
 	public int cambiarNombre(String nombre, int id) throws Exception {
 		Session session = HibernateUtil.getSessionFactory().openSession();
@@ -204,7 +219,7 @@ public class AlumnoHibernate implements AlumnoDao {
 			for (String Curso : cursos) {
 				System.out.println(Curso);
 			}
-			// TODOEliminar los alumnos del curso indicado por el usuario (debes mostrarle
+			// TODO Eliminar los alumnos del curso indicado por el usuario (debes mostrarle
 			// previamente los cursos existentes).
 			AlumnoH al = session.get(AlumnoH.class, "");
 
@@ -237,7 +252,7 @@ public class AlumnoHibernate implements AlumnoDao {
 
 	@Override
 	public List<AlumnoH> mostrarAlumnoPorPK() throws Exception {
-//		Mostrar el alumno (todos sus datos) a partir de su PK que elije el 
+//		TODO Mostrar el alumno (todos sus datos) a partir de su PK que elije el 
 //		usuario. Para ello, primero se deben mostrar todos los alumnos (solo la 
 //		PK y el nombre) e indicar al usuario que elija el que quiere mostrar. 
 		return null;
@@ -245,7 +260,7 @@ public class AlumnoHibernate implements AlumnoDao {
 
 	@Override
 	public int cambiarGrupo() throws Exception {
-//		Cambiar de grupo al alumno que elija el usuario. Para ello, primero se 
+//		TODO Cambiar de grupo al alumno que elija el usuario. Para ello, primero se 
 //		deben mostrar todos los alumnos (solo la PK y el nombre) e indicar al 
 //		usuario que elija la PK del alumno que quiere cambiar. Después se 
 //		mostrarán los grupos, para que el usuario elija a qué grupo irá el alumno.
@@ -253,7 +268,7 @@ public class AlumnoHibernate implements AlumnoDao {
 	}
 
 	public void mostrarCursos() throws Exception {
-//		Guardar el grupo que elija el usuario (con toda su información como 
+//		TODO Guardar el grupo que elija el usuario (con toda su información como 
 //				atributos) en un fichero XML o JSON. Para cada grupo se guardará 
 //				también el listado de alumnos de ese grupo. Los datos del alumno serán 
 //				atributos en el XML

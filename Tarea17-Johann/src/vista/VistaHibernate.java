@@ -29,6 +29,7 @@ public class VistaHibernate implements IVista {
 	public VistaHibernate() {
 		reader = new reader();
 		dao = AlumnoHibernate.getInstance();
+		fh = new FicherosHibernate();
 	}
 
 	public void init() {
@@ -87,22 +88,26 @@ public class VistaHibernate implements IVista {
 				break;
 			case 12:
 				mostrarAlumnoGrupo();
+
 				break;
 			case 13:
 				mostrarAlumnoPK();
+
 				break;
 			case 14:
 				cambiarGrupoAlumno();
+
 				break;
 			case 15:
 				guardarGrupoElegido();
+
 				break;
 			case 16:
-				System.out.println("\nSaliendo del programa...\n");
+				logger.info("Saliendo de la aplicacion.");
 
 				break;
 			default:
-				System.err.println("\nLa opcion dada no corresponde a una operacion valida.");
+				logger.error("Opcion dada no corresponde a una operacion.");
 			}
 
 		} while (opcion != 16);
@@ -245,8 +250,6 @@ public class VistaHibernate implements IVista {
 	}
 
 	public void guardarAlumnos() {
-		System.out.println("\nGUARDAR EN FICHERO(TXT)");
-		System.out.println("-----------------------");
 		try {
 			fh.guardarTxtAlumnos();
 			logger.info("Se ha guardado correctamente en el fichero.");
@@ -257,8 +260,6 @@ public class VistaHibernate implements IVista {
 	}
 
 	public void recogerAlumnos() {
-		System.out.println("\nLEER UN FICHERO(TXT)");
-		System.out.println("-----------------------");
 		try {
 			fh.leerTxtAlumnos();
 			logger.info("Se ha leido correctamente el fichero y guardado en la base de datos.");
@@ -352,20 +353,36 @@ public class VistaHibernate implements IVista {
 	public void mostrarAlumnoGrupo() {
 		try {
 			dao.mostrarAlumnosPorGrupo();
+			logger.info("Mostrado los alumnos correctamente.");
 		} catch (Exception e) {
 			logger.error("Error al recuperar el alumno." + e.getMessage(), e);
 		}
 	}
 
 	public void mostrarAlumnoPK() {
-
+		try {
+			dao.mostrarAlumnoPorPK();
+			logger.info("Mostrado el alumno por la PK.");
+		} catch (Exception e) {
+			logger.error("Error al recuperar el alumno." + e.getMessage(), e);
+		}
 	}
 
 	public void cambiarGrupoAlumno() {
-
+		try {
+			dao.cambiarGrupo();
+			logger.info("Alumno cambiado de grupo correctamente.");
+		} catch (Exception e) {
+			logger.error("Error al recuperar el alumno." + e.getMessage(), e);
+		}
 	}
 
 	public void guardarGrupoElegido() {
-
+		try {
+			dao.mostrarCursos();
+			logger.info("Creado JSON de correctamente.");
+		} catch (Exception e) {
+			logger.error("Error al recuperar el alumno." + e.getMessage(), e);
+		}
 	}
 }
