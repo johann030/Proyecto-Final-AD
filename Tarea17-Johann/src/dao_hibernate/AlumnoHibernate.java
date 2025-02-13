@@ -98,15 +98,12 @@ public class AlumnoHibernate implements AlumnoDao {
 
 	public List<GrupoH> conseguirGrupos() throws Exception {
 		List<GrupoH> GrupoH = new ArrayList<>();
-		Session session = HibernateUtil.getSessionFactory().openSession();
-		try {
+		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			GrupoH = session.createSelectionQuery("FROM GrupoH", GrupoH.class).getResultList();
 			logger.info("Lista de alumnos mostrada.");
 
 		} catch (Exception e) {
 			logger.error("Error al mostrar los alumnos." + e.getMessage(), e);
-		} finally {
-			session.close();
 		}
 		return GrupoH;
 	}
@@ -174,60 +171,25 @@ public class AlumnoHibernate implements AlumnoDao {
 
 	@Override
 	public void borrarPorApellido(String apellido) throws Exception {
-		// TODO
-		Session session = HibernateUtil.getSessionFactory().openSession();
-		Transaction transaccion = null;
-		try {
-			transaccion = session.beginTransaction();
-
-			AlumnoH al = session.get(AlumnoH.class, apellido);
-
-			if (al != null) {
-				session.remove(al);
-			}
-
-			transaccion.commit();
-
-			logger.info("Alumno borrado correctamente.");
-
-		} catch (Exception e) {
-			if (transaccion != null) {
-				transaccion.rollback();
-				logger.error("Error al borrar el alumno." + e.getMessage(), e);
-			}
-		} finally {
-			session.close();
-		}
-
-	}
-
-	@Override
-	public void borrarAlumnosPorCurso(String curso) throws Exception {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Transaction transaccion = null;
 		try {
 			transaccion = session.beginTransaction();
 
 			String hql = """
-					SELECT a.nia
-					FROM AlumnoH a
+					DELETE FROM AlumnoH
+					WHERE apellidos = :apellido
 					""";
 
-			List<String> cursos = session.createSelectionQuery(hql, String.class).getResultList();
-
-			System.out.println("LISTADO DE CURSOS");
-			for (String Curso : cursos) {
-				System.out.println(Curso);
-			}
-			// TODO Eliminar los alumnos del curso indicado por el usuario (debes mostrarle
-			// previamente los cursos existentes).
-			AlumnoH al = session.get(AlumnoH.class, "");
-
-			if (al != null) {
-				session.remove(al.getCurso());
-			}
+			int filas = session.createMutationQuery(hql).setParameter("apellido", apellido).executeUpdate();
 
 			transaccion.commit();
+
+			if (filas > 0) {
+				logger.info("Alumno borrado correctamente.");
+			} else {
+				logger.info("No se encontro alumno con ese apellido.");
+			}
 
 		} catch (Exception e) {
 			if (transaccion != null) {
@@ -239,38 +201,110 @@ public class AlumnoHibernate implements AlumnoDao {
 		}
 	}
 
-	@Override
-	public List<AlumnoH> mostrarAlumnosPorGrupo() throws Exception {
-		// TODO Mostrar los alumnos del grupo que elija el usuario: Mostrara los datos
-		// del alumno y del grupo al que pertenece
-		List<AlumnoH> al = mostrarAlumnos();
-		for (AlumnoH alH : al) {
-			System.out.println(alH);
+	public List<String> obtenerCursos() throws Exception {
+		List<String> cursos = new ArrayList<>();
+
+		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+			cursos = session.createSelectionQuery("SELECT a.curso FROM AlumnoH a GROUP BY a.curso", String.class)
+					.getResultList();
+		} catch (Exception e) {
+			logger.error("Error al obtener la lista de cursos." + e.getMessage(), e);
 		}
-		return null;
+		return cursos;
 	}
 
 	@Override
-	public List<AlumnoH> mostrarAlumnoPorPK() throws Exception {
-//		TODO Mostrar el alumno (todos sus datos) a partir de su PK que elije el 
-//		usuario. Para ello, primero se deben mostrar todos los alumnos (solo la 
-//		PK y el nombre) e indicar al usuario que elija el que quiere mostrar. 
-		return null;
+	public void borrarAlumnosPorCurso(String curso) throws Exception {
+		Transaction transaccion = null;
+
+		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+			transaccion = session.beginTransaction();
+
+			String hql = """
+					DELETE FROM AlumnoH
+					WHERE curso = :curso
+					""";
+
+			int filas = session.createMutationQuery(hql).setParameter("curso", curso).executeUpdate();
+
+			transaccion.commit();
+
+			if (filas > 0) {
+				logger.info("Alumno borrado correctamente.");
+			} else {
+				logger.info("No se encontro alumno con ese grupo.");
+			}
+
+		} catch (Exception e) {
+			if (transaccion != null) {
+				transaccion.rollback();
+				logger.error("Error al borrar el alumno." + e.getMessage(), e);
+			}
+		}
 	}
 
 	@Override
-	public int cambiarGrupo() throws Exception {
-//		TODO Cambiar de grupo al alumno que elija el usuario. Para ello, primero se 
-//		deben mostrar todos los alumnos (solo la PK y el nombre) e indicar al 
-//		usuario que elija la PK del alumno que quiere cambiar. Después se 
-//		mostrarán los grupos, para que el usuario elija a qué grupo irá el alumno.
-		return 0;
+	public List<AlumnoH> mostrarAlumnosPorGrupo(int id_grupo) throws Exception {
+		List<AlumnoH> al = new ArrayList<AlumnoH>();
+		List<GrupoH> gp = conseguirGrupos();
+
+		boolean grupoExiste = gp.stream().anyMatch(g -> g.getId_grupo() == id_grupo);
+
+		if (!grupoExiste) {
+			logger.info("El grupo no existe.");
+			return al;
+		}
+
+		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+			String hql = """
+					FROM AlumnoH
+					WHERE id_grupo = :idGrupo
+					""";
+			al = session.createSelectionQuery(hql, AlumnoH.class).setParameter("idGrupo", id_grupo).getResultList();
+
+			logger.info("Alumnos mostrados correctamente.");
+		} catch (Exception e) {
+			logger.error("No hay alumnos en el grupo." + e.getMessage(), e);
+		}
+		return al;
 	}
 
-	public void mostrarCursos() throws Exception {
-//		TODO Guardar el grupo que elija el usuario (con toda su información como 
-//				atributos) en un fichero XML o JSON. Para cada grupo se guardará 
-//				también el listado de alumnos de ese grupo. Los datos del alumno serán 
-//				atributos en el XML
+	@Override
+	public AlumnoH mostrarAlumnoPorPK(int nia) throws Exception {
+		List<AlumnoH> alumnos = mostrarAlumnos();
+
+		alumnos.forEach(alumno -> String.format("%d, %s", alumno.getNia(), alumno.getNombre()));
+		try {
+
+		} catch (Exception e) {
+			logger.error("Error al mostrar el alumno." + e.getMessage(), e);
+		}
+		return alumnos.stream().filter(alumno -> alumno.getNia() == nia).findFirst().orElse(null);
+	}
+
+	@Override
+	public void cambiarGrupo(int nia, int nuevoId) throws Exception {
+		Transaction transaccion = null;
+
+		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+			transaccion = session.beginTransaction();
+
+			AlumnoH alumno = session.get(AlumnoH.class, nia);
+
+			if (alumno != null) {
+				alumno.setId_grupo(nuevoId);
+				session.merge(alumno);
+
+				transaccion.commit();
+				logger.info("Alumno cambiado de grupo correctamente.");
+			} else {
+				logger.info("No se encontró un alumno con ese NIA.");
+			}
+		} catch (Exception e) {
+			if (transaccion != null) {
+				transaccion.rollback();
+				logger.error("Error al cambiar de grupo" + e.getMessage(), e);
+			}
+		}
 	}
 }

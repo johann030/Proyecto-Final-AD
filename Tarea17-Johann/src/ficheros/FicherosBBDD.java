@@ -178,7 +178,7 @@ public class FicherosBBDD implements Ficheros {
 	}
 
 	@Override
-	public void elegirGrupoJSON() throws Exception {
+	public void elegirGrupoJSON(int idGrupo) throws Exception {
 		// TODO Auto-generated method stub
 
 	}

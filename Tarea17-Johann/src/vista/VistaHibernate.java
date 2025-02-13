@@ -317,7 +317,8 @@ public class VistaHibernate implements IVista {
 		try {
 			System.out.println("\nLISTA DE CURSOS");
 			System.out.println("-----------------------");
-			dao.mostrarCursos();
+			List<String> cursos = dao.obtenerCursos();
+			cursos.forEach(System.out::println);
 			System.out.println("\nBORRAR POR CURSO");
 			System.out.println("-----------------------");
 			System.out.print("Introduzca el nia del alumno: ");
@@ -352,8 +353,14 @@ public class VistaHibernate implements IVista {
 
 	public void mostrarAlumnoGrupo() {
 		try {
-			dao.mostrarAlumnosPorGrupo();
-			logger.info("Mostrado los alumnos correctamente.");
+			int idGrupo = reader.nextInt();
+			List<AlumnoH> alumnos = dao.mostrarAlumnosPorGrupo(idGrupo);
+			if (alumnos.isEmpty()) {
+				logger.info("No hay alumnos para ese grupo.");
+			} else {
+				alumnos.forEach(System.out::println);
+				logger.info("Mostrado los alumnos correctamente.");
+			}
 		} catch (Exception e) {
 			logger.error("Error al recuperar el alumno." + e.getMessage(), e);
 		}
@@ -361,8 +368,14 @@ public class VistaHibernate implements IVista {
 
 	public void mostrarAlumnoPK() {
 		try {
-			dao.mostrarAlumnoPorPK();
-			logger.info("Mostrado el alumno por la PK.");
+			int nia = reader.nextInt();
+			AlumnoH alumno = dao.mostrarAlumnoPorPK(nia);
+			if (alumno != null) {
+				System.out.println(alumno);
+				logger.info("Mostrado el alumno por la PK.");
+			} else {
+				logger.info("Error al mostrar.");
+			}
 		} catch (Exception e) {
 			logger.error("Error al recuperar el alumno." + e.getMessage(), e);
 		}
@@ -370,7 +383,16 @@ public class VistaHibernate implements IVista {
 
 	public void cambiarGrupoAlumno() {
 		try {
-			dao.cambiarGrupo();
+			List<AlumnoH> alumnos = dao.mostrarAlumnos();
+			alumnos.forEach(
+					alumno -> System.out.println("NIA: " + alumno.getId_grupo() + " Nombre: " + alumno.getNombre()));
+			int nia = reader.nextInt();
+
+			List<GrupoH> grupos = dao.conseguirGrupos();
+			grupos.forEach(grupo -> System.out.println("ID Grupo: " + grupo.getId_grupo()));
+			int grupo = reader.nextInt();
+
+			dao.cambiarGrupo(nia, grupo);
 			logger.info("Alumno cambiado de grupo correctamente.");
 		} catch (Exception e) {
 			logger.error("Error al recuperar el alumno." + e.getMessage(), e);
@@ -379,7 +401,8 @@ public class VistaHibernate implements IVista {
 
 	public void guardarGrupoElegido() {
 		try {
-			dao.mostrarCursos();
+			int idGrupo = reader.nextInt();
+			fh.elegirGrupoJSON(idGrupo);
 			logger.info("Creado JSON de correctamente.");
 		} catch (Exception e) {
 			logger.error("Error al recuperar el alumno." + e.getMessage(), e);

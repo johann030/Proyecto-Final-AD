@@ -77,7 +77,6 @@ public class FicherosHibernate implements Ficheros {
 		List<AlumnoH> alumnoH = dao.mostrarAlumnos();
 
 		try (FileWriter JSON = new FileWriter("gruposHibernate.json")) {
-
 			for (GrupoH grupo : grupoH) {
 				JSONObject grupoJSON = new JSONObject();
 				grupoJSON.put("id_grupo", grupo.getId_grupo());
@@ -87,27 +86,30 @@ public class FicherosHibernate implements Ficheros {
 				JSONArray listaAlumnos = new JSONArray();
 
 				for (AlumnoH alumno : alumnoH) {
-					JSONObject alumnoJSON = new JSONObject();
-					alumnoJSON.put("NIA", alumno.getNia());
-					alumnoJSON.put("nombre", alumno.getNombre());
-					alumnoJSON.put("apellidos", alumno.getApellidos());
-					alumnoJSON.put("genero", alumno.getGenero());
-					alumnoJSON.put("fecha_nacimiento", alumno.getNacimiento());
-					alumnoJSON.put("ciclo", alumno.getCiclo());
-					alumnoJSON.put("curso", alumno.getCurso());
+					if (alumno.getId_grupo() == grupo.getId_grupo()) {
+						JSONObject alumnoJSON = new JSONObject();
+						alumnoJSON.put("NIA", alumno.getNia());
+						alumnoJSON.put("nombre", alumno.getNombre());
+						alumnoJSON.put("apellidos", alumno.getApellidos());
+						alumnoJSON.put("genero", alumno.getGenero());
+						alumnoJSON.put("fecha_nacimiento", alumno.getNacimiento());
+						alumnoJSON.put("ciclo", alumno.getCiclo());
+						alumnoJSON.put("curso", alumno.getCurso());
 
-					listaAlumnos.add(alumnoJSON);
+						listaAlumnos.add(alumnoJSON);
+					}
 				}
 				grupoJSON.put("alumnos", listaAlumnos);
+				listaGrupos.add(grupoJSON);
 			}
 			JSON.write(listaGrupos.toJSONString());
+			JSON.flush();
 
 			logger.info("Escritura he fichero JSON hecha correctamente.");
 
 		} catch (Exception e) {
 			logger.error("Error al escribir en el archivo." + e.getMessage(), e);
 		}
-
 	}
 
 	@Override
@@ -116,6 +118,10 @@ public class FicherosHibernate implements Ficheros {
 			JSONParser parser = new JSONParser();
 			JSONArray gruposArray = (JSONArray) parser.parse(new FileReader("gruposHibernate.json"));
 
+			if (gruposArray == null) {
+				logger.info("El JSON esta vacio.");
+				return;
+			}
 			for (Object grupoObj : gruposArray) {
 				JSONObject grupoJSON = (JSONObject) grupoObj;
 
@@ -142,7 +148,7 @@ public class FicherosHibernate implements Ficheros {
 							new AlumnoH(NIA, nombre, apellidos, genero, fecha_nacimiento, ciclo, curso, id_grupo));
 				}
 			}
-			logger.info("JSON leido he insertado correctamente.");
+			logger.info("JSON leido e insertado correctamente.");
 
 		} catch (Exception e) {
 			logger.error("Error al leer el archivo" + e.getMessage(), e);
@@ -150,8 +156,17 @@ public class FicherosHibernate implements Ficheros {
 	}
 
 	@Override
-	public void elegirGrupoJSON() throws Exception {
-		// TODO Auto-generated method stub
+	public void elegirGrupoJSON(int idGrupo) throws Exception {
+		// TODO
+		// Guardar el grupo que elija el usuario (con toda su información como
+//				atributos) en un fichero JSON. Para cada grupo se guardará 
+//				también el listado de alumnos de ese grupo.
+		try {
+			List<AlumnoH> alumnoH = dao.mostrarAlumnos();
+			List<GrupoH> grupoH = dao.conseguirGrupos();
 
+		} catch (Exception e) {
+			logger.error("" + e.getMessage(), e);
+		}
 	}
 }

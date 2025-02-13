@@ -10,5 +10,5 @@ public interface Ficheros {
 
 	void leerJSONGrupos() throws Exception;
 
-	void elegirGrupoJSON() throws Exception;
+	void elegirGrupoJSON(int idGrupo) throws Exception;
 }
