@@ -155,18 +155,45 @@ public class FicherosHibernate implements Ficheros {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void elegirGrupoJSON(int idGrupo) throws Exception {
 		// TODO
-		// Guardar el grupo que elija el usuario (con toda su información como
-//				atributos) en un fichero JSON. Para cada grupo se guardará 
-//				también el listado de alumnos de ese grupo.
-		try {
-			List<AlumnoH> alumnoH = dao.mostrarAlumnos();
-			List<GrupoH> grupoH = dao.conseguirGrupos();
+		List<GrupoH> grupoH = dao.conseguirGrupos();
+		List<AlumnoH> alumnoH = dao.mostrarAlumnos();
+		JSONObject grupoJSON = new JSONObject();
+
+		try (FileWriter JSON = new FileWriter("gruposHibernateElegido.json")) {
+			for (GrupoH grupo : grupoH) {
+				grupoJSON.put("id_grupo", grupo.getId_grupo());
+				grupoJSON.put("nombre_grupo", grupo.getNombre());
+				grupoJSON.put("aula", grupo.getAula());
+
+				JSONArray listaAlumnos = new JSONArray();
+
+				for (AlumnoH alumno : alumnoH) {
+					if (alumno.getId_grupo() == grupo.getId_grupo()) {
+						JSONObject alumnoJSON = new JSONObject();
+						alumnoJSON.put("NIA", alumno.getNia());
+						alumnoJSON.put("nombre", alumno.getNombre());
+						alumnoJSON.put("apellidos", alumno.getApellidos());
+						alumnoJSON.put("genero", alumno.getGenero());
+						alumnoJSON.put("fecha_nacimiento", alumno.getNacimiento());
+						alumnoJSON.put("ciclo", alumno.getCiclo());
+						alumnoJSON.put("curso", alumno.getCurso());
+
+						listaAlumnos.add(alumnoJSON);
+					}
+				}
+				grupoJSON.put("alumnos", listaAlumnos);
+			}
+			JSON.write(grupoJSON.toJSONString());
+			JSON.flush();
+
+			logger.info("Escritura he fichero JSON hecha correctamente.");
 
 		} catch (Exception e) {
-			logger.error("" + e.getMessage(), e);
+			logger.error("Error al escribir en el archivo." + e.getMessage(), e);
 		}
 	}
 }
