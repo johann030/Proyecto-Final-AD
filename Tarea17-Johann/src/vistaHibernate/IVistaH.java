@@ -5,7 +5,7 @@ import java.util.List;
 import modeloHibernate.AlumnoH;
 import modeloHibernate.GrupoH;
 
-public interface IVista {
+public interface IVistaH {
 
 	int menu();
 

@@ -14,13 +14,13 @@ import org.apache.logging.log4j.Logger;
 import modeloHibernate.AlumnoH;
 import modeloHibernate.GrupoH;
 
-public class VistaConsolaH implements IVista {
+public class VistaConsolaHibernate implements IVistaH {
 
-	private static final Logger logger = LogManager.getLogger(VistaConsolaH.class);
+	private static final Logger logger = LogManager.getLogger(VistaConsolaHibernate.class);
 
 	private reader reader;
 
-	public VistaConsolaH() {
+	public VistaConsolaHibernate() {
 		reader = new reader();
 	}
 

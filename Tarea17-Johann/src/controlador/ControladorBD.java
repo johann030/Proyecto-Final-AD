@@ -14,7 +14,7 @@ import vistaBD.IVistaBD;
 
 public class ControladorBD {
 
-	private static final Logger logger = LogManager.getLogger(Controlador.class);
+	private static final Logger logger = LogManager.getLogger(ControladorHibernate.class);
 
 	private Ficheros fichero = FicherosBBDD.getInstance();
 

@@ -10,18 +10,18 @@ import ficheros.Ficheros;
 import ficheros.FicherosHibernate;
 import modeloHibernate.AlumnoH;
 import modeloHibernate.GrupoH;
-import vistaHibernate.IVista;
+import vistaHibernate.IVistaH;
 
-public class Controlador {
+public class ControladorHibernate {
 
-	private static final Logger logger = LogManager.getLogger(Controlador.class);
+	private static final Logger logger = LogManager.getLogger(ControladorHibernate.class);
 
 	private Ficheros fichero = FicherosHibernate.getInstance();
 
-	public Controlador() {
+	public ControladorHibernate() {
 	}
 
-	public void ejecutar(AlumnoDao modelo, IVista vista) {
+	public void ejecutar(AlumnoDao modelo, IVistaH vista) {
 		int opcion = -1;
 
 		do {
@@ -105,7 +105,7 @@ public class Controlador {
 		} while (opcion != 16);
 	}
 
-	public void insertarAlumno(AlumnoDao modelo, IVista vista) {
+	public void insertarAlumno(AlumnoDao modelo, IVistaH vista) {
 		AlumnoH al = vista.insertarAlumno();
 
 		try {
@@ -120,7 +120,7 @@ public class Controlador {
 		}
 	}
 
-	public void insertarGrupo(AlumnoDao modelo, IVista vista) {
+	public void insertarGrupo(AlumnoDao modelo, IVistaH vista) {
 		GrupoH gp = vista.insertarGrupo();
 
 		try {
@@ -135,7 +135,7 @@ public class Controlador {
 		}
 	}
 
-	public void mostrarAlumnos(AlumnoDao modelo, IVista vista) {
+	public void mostrarAlumnos(AlumnoDao modelo, IVistaH vista) {
 		List<AlumnoH> alumnos;
 		try {
 			alumnos = modelo.mostrarAlumnos();
@@ -164,7 +164,7 @@ public class Controlador {
 		}
 	}
 
-	public void cambiarNombre(AlumnoDao modelo, IVista vista) {
+	public void cambiarNombre(AlumnoDao modelo, IVistaH vista) {
 		try {
 			int nia = vista.pedirNia();
 			String nombre = vista.pedirNombre();
@@ -175,7 +175,7 @@ public class Controlador {
 		}
 	}
 
-	public void borrarPorPK(AlumnoDao modelo, IVista vista) {
+	public void borrarPorPK(AlumnoDao modelo, IVistaH vista) {
 		try {
 			int nia = vista.pedirNia();
 			modelo.borrarPorPK(nia);
@@ -185,7 +185,7 @@ public class Controlador {
 		}
 	}
 
-	public void borrarPorApellido(AlumnoDao modelo, IVista vista) {
+	public void borrarPorApellido(AlumnoDao modelo, IVistaH vista) {
 		try {
 			String apellido = vista.pedirApellido();
 			modelo.borrarPorApellido(apellido);
@@ -195,7 +195,7 @@ public class Controlador {
 		}
 	}
 
-	public void borrarPorCurso(AlumnoDao modelo, IVista vista) {
+	public void borrarPorCurso(AlumnoDao modelo, IVistaH vista) {
 		try {
 			String curso = vista.pedirCurso();
 			modelo.borrarAlumnosPorCurso(curso);
@@ -223,7 +223,7 @@ public class Controlador {
 		}
 	}
 
-	public void mostrarAlumnoGrupo(AlumnoDao modelo, IVista vista) {
+	public void mostrarAlumnoGrupo(AlumnoDao modelo, IVistaH vista) {
 		try {
 			int idGrupo = vista.pedirIdGrupo();
 			List<AlumnoH> al = modelo.mostrarAlumnosPorGrupo(idGrupo);
@@ -235,7 +235,7 @@ public class Controlador {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void mostrarAlumnoPK(AlumnoDao modelo, IVista vista) {
+	public void mostrarAlumnoPK(AlumnoDao modelo, IVistaH vista) {
 		int nia = vista.pedirNia();
 		try {
 			AlumnoH al = modelo.mostrarAlumnoPorPK(nia);
@@ -247,7 +247,7 @@ public class Controlador {
 		}
 	}
 
-	public void cambiarGrupoAlumno(AlumnoDao modelo, IVista vista) {
+	public void cambiarGrupoAlumno(AlumnoDao modelo, IVistaH vista) {
 		int nia = vista.pedirNia();
 		int nuevoGrupo = vista.pedirIdGrupo();
 		try {
@@ -259,7 +259,7 @@ public class Controlador {
 
 	}
 
-	public void guardarGrupoElegido(IVista vista) {
+	public void guardarGrupoElegido(IVistaH vista) {
 		int grupo = vista.pedirIdGrupo();
 		try {
 			fichero.elegirGrupoJSON(grupo);

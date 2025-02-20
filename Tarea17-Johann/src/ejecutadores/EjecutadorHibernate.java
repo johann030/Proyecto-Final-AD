@@ -1,15 +1,15 @@
 package ejecutadores;
 
-import controlador.Controlador;
+import controlador.ControladorHibernate;
 import daoHibernate.AlumnoDao;
 import daoHibernate.AlumnoHibernate;
-import vistaHibernate.IVista;
-import vistaHibernate.VistaConsolaH;
+import vistaHibernate.IVistaH;
+import vistaHibernate.VistaConsolaHibernate;
 
 public class EjecutadorHibernate {
 	public static void main(String[] args) {
 		AlumnoDao modelo = AlumnoHibernate.getInstance();
-		IVista vista = new VistaConsolaH();
-		new Controlador().ejecutar(modelo, vista);
+		IVistaH vista = new VistaConsolaHibernate();
+		new ControladorHibernate().ejecutar(modelo, vista);
 	}
 }
