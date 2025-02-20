@@ -14,9 +14,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import dao_hibernate.AlumnoHibernate;
-import modelo_hibernate.AlumnoH;
-import modelo_hibernate.GrupoH;
+import daoHibernate.AlumnoHibernate;
+import modeloHibernate.AlumnoH;
+import modeloHibernate.GrupoH;
 
 public class FicherosHibernate implements Ficheros {
 

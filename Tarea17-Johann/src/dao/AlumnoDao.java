@@ -21,11 +21,9 @@ public interface AlumnoDao {
 
 	void borrarAlumnosPorCurso(String curso) throws Exception;
 
-	List<Alumno> mostrarAlumnosPorGrupo() throws Exception;
+	List<Alumno> mostrarAlumnosPorGrupo(int id_grupo) throws Exception;
 
-	List<Alumno> mostrarAlumnoPorPK() throws Exception;
+	Alumno mostrarAlumnoPorPK(int nia) throws Exception;
 
-	int cambiarGrupo() throws Exception;
-
-	void elegirGrupoJSON() throws Exception;
+	void cambiarGrupo(int nia, int nuevoId) throws Exception;
 }

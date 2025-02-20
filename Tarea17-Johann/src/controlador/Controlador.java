@@ -5,23 +5,23 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import dao.AlumnoDao;
+import daoHibernate.AlumnoDao;
 import ficheros.Ficheros;
-import ficheros.FicherosBBDD;
-import modelo.Alumno;
-import modelo.Grupo;
-import vistaBD.IVistaBD;
+import ficheros.FicherosHibernate;
+import modeloHibernate.AlumnoH;
+import modeloHibernate.GrupoH;
+import vistaHibernate.IVista;
 
-public class ControladorBD {
+public class Controlador {
 
 	private static final Logger logger = LogManager.getLogger(Controlador.class);
 
-	private Ficheros fichero = FicherosBBDD.getInstance();
+	private Ficheros fichero = FicherosHibernate.getInstance();
 
-	public ControladorBD() {
+	public Controlador() {
 	}
 
-	public void ejecutar(AlumnoDao modelo, IVistaBD vista) {
+	public void ejecutar(AlumnoDao modelo, IVista vista) {
 		int opcion = -1;
 
 		do {
@@ -105,8 +105,8 @@ public class ControladorBD {
 		} while (opcion != 16);
 	}
 
-	public void insertarAlumno(AlumnoDao modelo, IVistaBD vista) {
-		Alumno al = vista.insertarAlumno();
+	public void insertarAlumno(AlumnoDao modelo, IVista vista) {
+		AlumnoH al = vista.insertarAlumno();
 
 		try {
 			int alumnoInsertado = modelo.insertarAlumno(al);
@@ -120,8 +120,8 @@ public class ControladorBD {
 		}
 	}
 
-	public void insertarGrupo(AlumnoDao modelo, IVistaBD vista) {
-		Grupo gp = vista.insertarGrupo();
+	public void insertarGrupo(AlumnoDao modelo, IVista vista) {
+		GrupoH gp = vista.insertarGrupo();
 
 		try {
 			int grupoInsertado = modelo.insertarGrupo(gp);
@@ -135,8 +135,8 @@ public class ControladorBD {
 		}
 	}
 
-	public void mostrarAlumnos(AlumnoDao modelo, IVistaBD vista) {
-		List<Alumno> alumnos;
+	public void mostrarAlumnos(AlumnoDao modelo, IVista vista) {
+		List<AlumnoH> alumnos;
 		try {
 			alumnos = modelo.mostrarAlumnos();
 			vista.mostrarAlumnos(alumnos);
@@ -164,7 +164,7 @@ public class ControladorBD {
 		}
 	}
 
-	public void cambiarNombre(AlumnoDao modelo, IVistaBD vista) {
+	public void cambiarNombre(AlumnoDao modelo, IVista vista) {
 		try {
 			int nia = vista.pedirNia();
 			String nombre = vista.pedirNombre();
@@ -175,7 +175,7 @@ public class ControladorBD {
 		}
 	}
 
-	public void borrarPorPK(AlumnoDao modelo, IVistaBD vista) {
+	public void borrarPorPK(AlumnoDao modelo, IVista vista) {
 		try {
 			int nia = vista.pedirNia();
 			modelo.borrarPorPK(nia);
@@ -185,7 +185,7 @@ public class ControladorBD {
 		}
 	}
 
-	public void borrarPorApellido(AlumnoDao modelo, IVistaBD vista) {
+	public void borrarPorApellido(AlumnoDao modelo, IVista vista) {
 		try {
 			String apellido = vista.pedirApellido();
 			modelo.borrarPorApellido(apellido);
@@ -195,7 +195,7 @@ public class ControladorBD {
 		}
 	}
 
-	public void borrarPorCurso(AlumnoDao modelo, IVistaBD vista) {
+	public void borrarPorCurso(AlumnoDao modelo, IVista vista) {
 		try {
 			String curso = vista.pedirCurso();
 			modelo.borrarAlumnosPorCurso(curso);
@@ -223,10 +223,10 @@ public class ControladorBD {
 		}
 	}
 
-	public void mostrarAlumnoGrupo(AlumnoDao modelo, IVistaBD vista) {
+	public void mostrarAlumnoGrupo(AlumnoDao modelo, IVista vista) {
 		try {
 			int idGrupo = vista.pedirIdGrupo();
-			List<Alumno> al = modelo.mostrarAlumnosPorGrupo(idGrupo);
+			List<AlumnoH> al = modelo.mostrarAlumnosPorGrupo(idGrupo);
 			vista.mostrarAlumnos(al);
 			logger.info("Se han mostrado correctamente los alumnos.");
 		} catch (Exception e) {
@@ -235,11 +235,11 @@ public class ControladorBD {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void mostrarAlumnoPK(AlumnoDao modelo, IVistaBD vista) {
+	public void mostrarAlumnoPK(AlumnoDao modelo, IVista vista) {
 		int nia = vista.pedirNia();
 		try {
-			Alumno al = modelo.mostrarAlumnoPorPK(nia);
-			vista.mostrarAlumnos((List<Alumno>) al);
+			AlumnoH al = modelo.mostrarAlumnoPorPK(nia);
+			vista.mostrarAlumnos((List<AlumnoH>) al);
 			logger.info("El alumno ha sido insertado correctamente.");
 
 		} catch (Exception e) {
@@ -247,7 +247,7 @@ public class ControladorBD {
 		}
 	}
 
-	public void cambiarGrupoAlumno(AlumnoDao modelo, IVistaBD vista) {
+	public void cambiarGrupoAlumno(AlumnoDao modelo, IVista vista) {
 		int nia = vista.pedirNia();
 		int nuevoGrupo = vista.pedirIdGrupo();
 		try {
@@ -259,7 +259,7 @@ public class ControladorBD {
 
 	}
 
-	public void guardarGrupoElegido(IVistaBD vista) {
+	public void guardarGrupoElegido(IVista vista) {
 		int grupo = vista.pedirIdGrupo();
 		try {
 			fichero.elegirGrupoJSON(grupo);

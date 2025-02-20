@@ -175,25 +175,19 @@ public class AlumnoBD implements AlumnoDao {
 	}
 
 	@Override
-	public List<Alumno> mostrarAlumnosPorGrupo() throws Exception {
-		mostrarAlumnos();
-		return null;
-	}
-
-	@Override
-	public List<Alumno> mostrarAlumnoPorPK() throws Exception {
+	public List<Alumno> mostrarAlumnosPorGrupo(int id_grupo) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public int cambiarGrupo() throws Exception {
+	public Alumno mostrarAlumnoPorPK(int nia) throws Exception {
 		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
 
 	@Override
-	public void elegirGrupoJSON() throws Exception {
+	public void cambiarGrupo(int nia, int nuevoId) throws Exception {
 		// TODO Auto-generated method stub
 
 	}

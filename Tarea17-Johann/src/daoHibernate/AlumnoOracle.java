@@ -1,4 +1,4 @@
-package dao_hibernate;
+package daoHibernate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +9,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.MutationQuery;
 
-import modelo_hibernate.AlumnoH;
-import modelo_hibernate.GrupoH;
+import modeloHibernate.AlumnoH;
+import modeloHibernate.GrupoH;
 import pool.HibernateUtilOracle;
 
 public class AlumnoOracle implements AlumnoDao {

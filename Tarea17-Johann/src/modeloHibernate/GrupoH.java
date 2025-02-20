@@ -1,4 +1,4 @@
-package modelo_hibernate;
+package modeloHibernate;
 
 import java.io.Serializable;
 

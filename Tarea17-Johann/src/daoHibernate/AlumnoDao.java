@@ -1,9 +1,9 @@
-package dao_hibernate;
+package daoHibernate;
 
 import java.util.List;
 
-import modelo_hibernate.AlumnoH;
-import modelo_hibernate.GrupoH;
+import modeloHibernate.AlumnoH;
+import modeloHibernate.GrupoH;
 
 public interface AlumnoDao {
 
