@@ -22,6 +22,7 @@ public class VistaHibernate implements IVista {
 
 	private reader reader;
 
+	//TODO
 	private AlumnoHibernate dao;
 
 	private FicherosHibernate fh;
@@ -29,7 +30,7 @@ public class VistaHibernate implements IVista {
 	public VistaHibernate() {
 		reader = new reader();
 		dao = AlumnoHibernate.getInstance();
-		fh = new FicherosHibernate();
+		fh = FicherosHibernate.getInstance();
 	}
 
 	public void init() {

@@ -11,28 +11,27 @@ import org.hibernate.query.MutationQuery;
 
 import modelo_hibernate.AlumnoH;
 import modelo_hibernate.GrupoH;
-import pool.HibernateUtil;
+import pool.HibernateUtilOracle;
 
-public class AlumnoHibernate implements AlumnoDao {
-
+public class AlumnoOracle implements AlumnoDao {
 	private static final Logger logger = LogManager.getLogger(AlumnoHibernate.class);
 
-	private static AlumnoHibernate instance;
+	private static AlumnoOracle instance;
 
 	static {
-		instance = new AlumnoHibernate();
+		instance = new AlumnoOracle();
 	}
 
-	private AlumnoHibernate() {
+	private AlumnoOracle() {
 	}
 
-	public static AlumnoHibernate getInstance() {
+	public static AlumnoOracle getInstance() {
 		return instance;
 	}
 
 	@Override
 	public int insertarAlumno(AlumnoH al) throws Exception {
-		Session session = HibernateUtil.getSessionFactory().openSession();
+		Session session = HibernateUtilOracle.getSessionFactory().openSession();
 		Transaction transaccion = null;
 		try {
 			// Crear la transaccion de la sesion
@@ -58,7 +57,7 @@ public class AlumnoHibernate implements AlumnoDao {
 
 	@Override
 	public int insertarGrupo(GrupoH gp) throws Exception {
-		Session session = HibernateUtil.getSessionFactory().openSession();
+		Session session = HibernateUtilOracle.getSessionFactory().openSession();
 		Transaction transaccion = null;
 		try {
 			transaccion = session.beginTransaction();
@@ -83,7 +82,7 @@ public class AlumnoHibernate implements AlumnoDao {
 	@Override
 	public List<AlumnoH> mostrarAlumnos() throws Exception {
 		List<AlumnoH> AlumnoH = new ArrayList<>();
-		Session session = HibernateUtil.getSessionFactory().openSession();
+		Session session = HibernateUtilOracle.getSessionFactory().openSession();
 		try {
 			AlumnoH = session.createSelectionQuery("FROM AlumnoH", AlumnoH.class).getResultList();
 			logger.info("Lista de alumnos mostrada.");
@@ -98,7 +97,7 @@ public class AlumnoHibernate implements AlumnoDao {
 
 	public List<GrupoH> conseguirGrupos() throws Exception {
 		List<GrupoH> GrupoH = new ArrayList<>();
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try (Session session = HibernateUtilOracle.getSessionFactory().openSession()) {
 			GrupoH = session.createSelectionQuery("FROM GrupoH", GrupoH.class).getResultList();
 			logger.info("Lista de alumnos mostrada.");
 
@@ -110,7 +109,7 @@ public class AlumnoHibernate implements AlumnoDao {
 
 	@Override
 	public int cambiarNombre(String nombre, int id) throws Exception {
-		Session session = HibernateUtil.getSessionFactory().openSession();
+		Session session = HibernateUtilOracle.getSessionFactory().openSession();
 		Transaction transaccion = null;
 		try {
 			transaccion = session.beginTransaction();
@@ -144,7 +143,7 @@ public class AlumnoHibernate implements AlumnoDao {
 
 	@Override
 	public void borrarPorPK(int id) throws Exception {
-		Session session = HibernateUtil.getSessionFactory().openSession();
+		Session session = HibernateUtilOracle.getSessionFactory().openSession();
 		Transaction transaccion = null;
 		try {
 			transaccion = session.beginTransaction();
@@ -171,7 +170,7 @@ public class AlumnoHibernate implements AlumnoDao {
 
 	@Override
 	public void borrarPorApellido(String apellido) throws Exception {
-		Session session = HibernateUtil.getSessionFactory().openSession();
+		Session session = HibernateUtilOracle.getSessionFactory().openSession();
 		Transaction transaccion = null;
 		try {
 			transaccion = session.beginTransaction();
@@ -203,7 +202,7 @@ public class AlumnoHibernate implements AlumnoDao {
 
 	public List<String> obtenerCursos() throws Exception {
 		List<String> cursos = new ArrayList<>();
-		Session session = HibernateUtil.getSessionFactory().openSession();
+		Session session = HibernateUtilOracle.getSessionFactory().openSession();
 		try {
 			cursos = session.createSelectionQuery("SELECT a.curso FROM AlumnoH a GROUP BY a.curso", String.class)
 					.getResultList();
@@ -218,7 +217,7 @@ public class AlumnoHibernate implements AlumnoDao {
 	@Override
 	public void borrarAlumnosPorCurso(String curso) throws Exception {
 		Transaction transaccion = null;
-		Session session = HibernateUtil.getSessionFactory().openSession();
+		Session session = HibernateUtilOracle.getSessionFactory().openSession();
 		try {
 			transaccion = session.beginTransaction();
 
@@ -258,7 +257,7 @@ public class AlumnoHibernate implements AlumnoDao {
 			logger.info("El grupo no existe.");
 			return al;
 		}
-		Session session = HibernateUtil.getSessionFactory().openSession();
+		Session session = HibernateUtilOracle.getSessionFactory().openSession();
 		try {
 			String hql = """
 					FROM AlumnoH
@@ -291,7 +290,7 @@ public class AlumnoHibernate implements AlumnoDao {
 	@Override
 	public void cambiarGrupo(int nia, int nuevoId) throws Exception {
 		Transaction transaccion = null;
-		Session session = HibernateUtil.getSessionFactory().openSession();
+		Session session = HibernateUtilOracle.getSessionFactory().openSession();
 		try {
 			transaccion = session.beginTransaction();
 

@@ -24,6 +24,19 @@ import pool.Conexion;
 public class FicherosBBDD implements Ficheros {
 	private AlumnoDao bd = AlumnoBD.getInstance();
 
+	private static FicherosBBDD instance;
+
+	static {
+		instance = new FicherosBBDD();
+	}
+
+	private FicherosBBDD() {
+	}
+
+	public static FicherosBBDD getInstance() {
+		return instance;
+	}
+
 	@Override
 	public void guardarTxtAlumnos() throws Exception {
 		String sql = """

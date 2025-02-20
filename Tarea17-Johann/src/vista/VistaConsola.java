@@ -15,8 +15,6 @@ import dao.AlumnoBD;
 import ficheros.FicherosBBDD;
 import modelo.Alumno;
 import modelo.Grupo;
-import modelo_hibernate.AlumnoH;
-import modelo_hibernate.GrupoH;
 
 public class VistaConsola implements IVista {
 
@@ -31,6 +29,7 @@ public class VistaConsola implements IVista {
 	public VistaConsola() {
 		reader = new reader();
 		dao = AlumnoBD.getInstance();
+		fh = FicherosBBDD.getInstance();
 	}
 
 	public void init() {

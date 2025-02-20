@@ -17,13 +17,25 @@ import org.json.simple.parser.JSONParser;
 import dao_hibernate.AlumnoHibernate;
 import modelo_hibernate.AlumnoH;
 import modelo_hibernate.GrupoH;
-import vista.VistaHibernate;
 
 public class FicherosHibernate implements Ficheros {
 
-	private AlumnoHibernate dao = AlumnoHibernate.getInstance();;
+	private AlumnoHibernate dao = AlumnoHibernate.getInstance();
 
-	private static final Logger logger = LogManager.getLogger(VistaHibernate.class);
+	private static final Logger logger = LogManager.getLogger(FicherosHibernate.class);
+
+	private static FicherosHibernate instance;
+
+	static {
+		instance = new FicherosHibernate();
+	}
+
+	private FicherosHibernate() {
+	}
+
+	public static FicherosHibernate getInstance() {
+		return instance;
+	}
 
 	@Override
 	public void guardarTxtAlumnos() throws Exception {
