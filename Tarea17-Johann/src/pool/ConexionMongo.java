@@ -14,11 +14,11 @@ public class ConexionMongo {
 	private static final Logger logger = LogManager.getLogger(ConexionMongo.class);
 
 	static {
-		String uri = "mongodb+srv://johann06:manager@cluster0.6zir8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+//		String uri = "mongodb+srv://johann06:manager@cluster0.6zir8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 		// TODO esto se cambia por la conexion en localhost
 
-		clienteMongo = MongoClients.create(uri);
-//		clienteMongo = MongoClients.create("mongodb://localhost:27017");
+//		clienteMongo = MongoClients.create(uri);
+		clienteMongo = MongoClients.create("mongodb://localhost:27017");
 		baseDatos = clienteMongo.getDatabase("johann06");
 	}
 
