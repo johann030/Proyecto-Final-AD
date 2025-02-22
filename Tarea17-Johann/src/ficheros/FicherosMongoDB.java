@@ -14,39 +14,38 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import daoHibernate.AlumnoHibernate;
-import modeloHibernate.AlumnoH;
-import modeloHibernate.GrupoH;
+import dao.AlumnoMongoDB;
+import modelo.Alumno;
+import modelo.Grupo;
 
-public class FicherosHibernate implements Ficheros {
+public class FicherosMongoDB implements Ficheros {
 
-	private AlumnoHibernate dao = AlumnoHibernate.getInstance();
+	private static final Logger logger = LogManager.getLogger(FicherosMongoDB.class);
 
-	private static final Logger logger = LogManager.getLogger(FicherosHibernate.class);
+	private AlumnoMongoDB dao = AlumnoMongoDB.getInstance();
 
-	private static FicherosHibernate instance;
+	private static FicherosMongoDB instance;
 
 	static {
-		instance = new FicherosHibernate();
+		instance = new FicherosMongoDB();
 	}
 
-	private FicherosHibernate() {
+	private FicherosMongoDB() {
 	}
 
-	public static FicherosHibernate getInstance() {
+	public static FicherosMongoDB getInstance() {
 		return instance;
 	}
 
 	@Override
 	public void guardarTxtAlumnos() throws Exception {
+		List<Alumno> al = dao.mostrarAlumnos();
 
-		List<AlumnoH> alH = dao.mostrarAlumnos();
-
-		try (BufferedWriter bw = new BufferedWriter(new FileWriter("alumnosHibernate.txt"))) {
-			if (alH.isEmpty()) {
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter("alumnosMongoDB.txt"))) {
+			if (al.isEmpty()) {
 				logger.info("No hay alumnos para guardar.");
 			} else {
-				for (AlumnoH alumno : alH) {
+				for (Alumno alumno : al) {
 					bw.write(String.format("%d, %s, %s, %s, %s, %s, %s, %d", alumno.getNia(), alumno.getNombre(),
 							alumno.getApellidos(), alumno.getGenero(), alumno.getNacimiento(), alumno.getCiclo(),
 							alumno.getCurso(), alumno.getId_grupo()));
@@ -54,14 +53,12 @@ public class FicherosHibernate implements Ficheros {
 				}
 				logger.info("Escritura he fichero txt hecha correctamente.");
 			}
-		} catch (Exception e) {
-			logger.error("Error al escribir en el archivo." + e.getMessage(), e);
 		}
 	}
 
 	@Override
 	public void leerTxtAlumnos() throws Exception {
-		try (BufferedReader br = new BufferedReader(new FileReader("alumnosHibernate.txt"))) {
+		try (BufferedReader br = new BufferedReader(new FileReader("alumnosMongoDB.txt"))) {
 			String lineas;
 			while ((lineas = br.readLine()) != null) {
 				String[] alumnoData = lineas.split(",");
@@ -74,7 +71,7 @@ public class FicherosHibernate implements Ficheros {
 				String curso = alumnoData[6].trim();
 				int id_grupo = Integer.parseInt(alumnoData[7].trim());
 
-				dao.insertarAlumno(new AlumnoH(nia, nombre, apellidos, genero, nacimiento, ciclo, curso, id_grupo));
+				dao.insertarAlumno(new Alumno(nia, nombre, apellidos, genero, nacimiento, ciclo, curso, id_grupo));
 			}
 		} catch (Exception e) {
 			logger.error("Error al leer el archivo" + e.getMessage(), e);
@@ -85,11 +82,11 @@ public class FicherosHibernate implements Ficheros {
 	@Override
 	public void guardarJSONGrupos() throws Exception {
 		JSONArray listaGrupos = new JSONArray();
-		List<GrupoH> grupoH = dao.conseguirGrupos();
-		List<AlumnoH> alumnoH = dao.mostrarAlumnos();
+		List<Grupo> grupos = ((AlumnoMongoDB) dao).mostrarGrupo();
+		List<Alumno> alumnos = dao.mostrarAlumnos();
 
-		try (FileWriter JSON = new FileWriter("gruposHibernate.json")) {
-			for (GrupoH grupo : grupoH) {
+		try (FileWriter JSON = new FileWriter("gruposMongoDB.json")) {
+			for (Grupo grupo : grupos) {
 				JSONObject grupoJSON = new JSONObject();
 				grupoJSON.put("id_grupo", grupo.getId_grupo());
 				grupoJSON.put("nombre_grupo", grupo.getNombre());
@@ -97,7 +94,7 @@ public class FicherosHibernate implements Ficheros {
 
 				JSONArray listaAlumnos = new JSONArray();
 
-				for (AlumnoH alumno : alumnoH) {
+				for (Alumno alumno : alumnos) {
 					if (alumno.getId_grupo() == grupo.getId_grupo()) {
 						JSONObject alumnoJSON = new JSONObject();
 						alumnoJSON.put("NIA", alumno.getNia());
@@ -128,7 +125,7 @@ public class FicherosHibernate implements Ficheros {
 	public void leerJSONGrupos() throws Exception {
 		try {
 			JSONParser parser = new JSONParser();
-			JSONArray gruposArray = (JSONArray) parser.parse(new FileReader("gruposHibernate.json"));
+			JSONArray gruposArray = (JSONArray) parser.parse(new FileReader("gruposMongoDB.json"));
 
 			if (gruposArray == null) {
 				logger.info("El JSON esta vacio.");
@@ -141,7 +138,7 @@ public class FicherosHibernate implements Ficheros {
 				String nombre_grupo = (String) grupoJSON.get("nombre_grupo");
 				int aula = ((Long) grupoJSON.get("aula")).intValue();
 
-				dao.insertarGrupo(new GrupoH(id_grupo, nombre_grupo, aula));
+				dao.insertarGrupo(new Grupo(id_grupo, nombre_grupo, aula));
 
 				JSONArray alumnosArray = (JSONArray) grupoJSON.get("alumnos");
 				for (Object alumnoObj : alumnosArray) {
@@ -157,7 +154,7 @@ public class FicherosHibernate implements Ficheros {
 					String ciclo = (String) alumnoJSON.get("ciclo");
 					String curso = (String) alumnoJSON.get("curso");
 					dao.insertarAlumno(
-							new AlumnoH(NIA, nombre, apellidos, genero, fecha_nacimiento, ciclo, curso, id_grupo));
+							new Alumno(NIA, nombre, apellidos, genero, fecha_nacimiento, ciclo, curso, id_grupo));
 				}
 			}
 			logger.info("JSON leido e insertado correctamente.");
@@ -170,19 +167,19 @@ public class FicherosHibernate implements Ficheros {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void elegirGrupoJSON(int idGrupo) throws Exception {
-		List<GrupoH> grupoH = dao.conseguirGrupos();
-		List<AlumnoH> alumnoH = dao.mostrarAlumnos();
+		List<Grupo> grupos = dao.mostrarGrupo();
+		List<Alumno> alumnos = dao.mostrarAlumnos();
 		JSONObject grupoJSON = new JSONObject();
 
 		try (FileWriter JSON = new FileWriter("gruposHibernateElegido.json")) {
-			for (GrupoH grupo : grupoH) {
+			for (Grupo grupo : grupos) {
 				grupoJSON.put("id_grupo", grupo.getId_grupo());
 				grupoJSON.put("nombre_grupo", grupo.getNombre());
 				grupoJSON.put("aula", grupo.getAula());
 
 				JSONArray listaAlumnos = new JSONArray();
 
-				for (AlumnoH alumno : alumnoH) {
+				for (Alumno alumno : alumnos) {
 					if (alumno.getId_grupo() == grupo.getId_grupo()) {
 						JSONObject alumnoJSON = new JSONObject();
 						alumnoJSON.put("NIA", alumno.getNia());

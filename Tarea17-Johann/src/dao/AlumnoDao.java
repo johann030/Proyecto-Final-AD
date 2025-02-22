@@ -26,4 +26,6 @@ public interface AlumnoDao {
 	Alumno mostrarAlumnoPorPK(int nia) throws Exception;
 
 	void cambiarGrupo(int nia, int nuevoId) throws Exception;
+
+	void cerrarConexion() throws Exception;
 }

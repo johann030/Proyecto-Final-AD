@@ -191,4 +191,10 @@ public class AlumnoBD implements AlumnoDao {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	public void cerrarConexion() throws Exception {
+		// TODO Auto-generated method stub
+
+	}
 }

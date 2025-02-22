@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,6 +24,9 @@ import modelo.Grupo;
 import pool.Conexion;
 
 public class FicherosBBDD implements Ficheros {
+
+	private static final Logger logger = LogManager.getLogger(FicherosBBDD.class);
+
 	private AlumnoDao bd = AlumnoBD.getInstance();
 
 	private static FicherosBBDD instance;
@@ -56,8 +61,7 @@ public class FicherosBBDD implements Ficheros {
 				bw.newLine();
 			}
 
-			System.out.println("Se han guardado los alumnos correctamente.");
-
+			logger.info("Se han guardado los alumnos correctamente.");
 		}
 	}
 
@@ -195,5 +199,4 @@ public class FicherosBBDD implements Ficheros {
 		// TODO Auto-generated method stub
 
 	}
-
 }
